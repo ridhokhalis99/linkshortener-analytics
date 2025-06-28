@@ -1,9 +1,8 @@
-FROM eclipse-temurin:21-jdk-alpine
+FROM eclipse-temurin:21-jdk-alpine AS build
 
 WORKDIR /app
 
-COPY . .
+COPY build/libs/*.jar app.jar
 
-RUN ./gradlew bootJar --no-daemon
-
-CMD ["./gradlew", "bootRun", "--no-daemon"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
+EXPOSE 8080
