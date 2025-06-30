@@ -1,22 +1,21 @@
 services:
   analytics:
-    build:
-      context: .
-    ports:
-      - "8081:8080"
+    image: eclipse-temurin:21-jdk-alpine
     volumes:
       - .:/app
     working_dir: /app
     command: ./gradlew bootRun --no-daemon
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linkdb
-      SPRING_DATASOURCE_USERNAME: user
-      SPRING_DATASOURCE_PASSWORD: pass
-      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_DATASOURCE_URL: jdbc:postgresql://${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: ${KAFKA_HOST}:${KAFKA_PORT}
       IPINFO_TOKEN: ${IPINFO_TOKEN}
+      SERVER_PORT: ${APP_PORT}
     networks:
       - appnet
-
 networks:
   appnet:
     external: true
